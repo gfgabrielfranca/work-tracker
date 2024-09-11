@@ -7,7 +7,6 @@ const config: KnipConfig = {
     'eslint-plugin-promise',
     'eslint-plugin-import',
     'eslint-plugin-n',
-    'prettier',
     'expo-system-ui',
   ],
 };

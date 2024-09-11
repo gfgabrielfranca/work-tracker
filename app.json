@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "work-tracker",
+    "name": "Work Tracker",
     "slug": "work-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "work-tracker",
     "userInterfaceStyle": "automatic",
-    "ios": { "supportsTablet": true },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.worktracker"
     },
     "plugins": ["expo-router"],
     "experiments": {

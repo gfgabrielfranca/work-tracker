@@ -1,13 +1,29 @@
-import { Text, useColorScheme, View } from 'react-native';
+import { Button } from '@/components/Button';
+import { Modal, ModalChange, ModalContent } from '@/components/Modal';
+import { Typography } from '@/components/Typography';
+import { View } from 'react-native';
 
 export default function Index() {
-  const colorScheme = useColorScheme();
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ color: colorScheme === 'light' ? 'black' : 'white' }}>
-        Hello World
-      </Text>
+      <Modal>
+        <ModalChange
+          render={(setIsModalOpen) => (
+            <Button onPress={() => setIsModalOpen(true)}>
+              <Typography>Open Modal</Typography>
+            </Button>
+          )}
+        />
+        <ModalContent style={{ padding: 32 }}>
+          <ModalChange
+            render={(setIsModalOpen) => (
+              <Button onPress={() => setIsModalOpen(false)}>
+                <Typography>Close Modal</Typography>
+              </Button>
+            )}
+          />
+        </ModalContent>
+      </Modal>
     </View>
   );
 }

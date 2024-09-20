@@ -62,7 +62,7 @@ export function ModalContent({ style, ...props }: ViewProps) {
       }}
       onPress={() => setIsOpen(false)}
     >
-      <Animated.View
+      <AnimatedPressable
         entering={SlideInDown}
         exiting={SlideOutDown}
         style={[

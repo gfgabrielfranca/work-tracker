@@ -1,3 +1,4 @@
+import { Portal } from '@gorhom/portal';
 import { createContext, useContext, useState } from 'react';
 import { Pressable, ViewProps } from 'react-native';
 import Animated, {
@@ -46,36 +47,42 @@ export function ModalChange({
 }
 
 export function ModalContent({ style, ...props }: ViewProps) {
-  const { isOpen, setIsOpen } = useModal(ModalContent.name);
+  const value = useModal(ModalContent.name);
 
-  if (!isOpen) return null;
+  if (!value.isOpen) return null;
 
   return (
-    <AnimatedPressable
-      entering={FadeIn}
-      exiting={FadeOut}
-      style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-        position: 'absolute',
-        height: '100%',
-        width: '100%',
-      }}
-      onPress={() => setIsOpen(false)}
-    >
-      <AnimatedPressable
-        entering={SlideInDown}
-        exiting={SlideOutDown}
-        style={[
-          {
-            backgroundColor: 'black',
+    <Portal>
+      <ModalContext.Provider value={value}>
+        <AnimatedPressable
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
             position: 'absolute',
+            height: '100%',
             width: '100%',
-            bottom: 0,
-          },
-          style,
-        ]}
-        {...props}
-      />
-    </AnimatedPressable>
+          }}
+          onPress={() => value.setIsOpen(false)}
+        >
+          <AnimatedPressable
+            entering={SlideInDown}
+            exiting={SlideOutDown}
+            style={[
+              {
+                backgroundColor: 'black',
+                position: 'absolute',
+                paddingVertical: 32,
+                width: '100%',
+                padding: 24,
+                bottom: 0,
+              },
+              style,
+            ]}
+            {...props}
+          />
+        </AnimatedPressable>
+      </ModalContext.Provider>
+    </Portal>
   );
 }

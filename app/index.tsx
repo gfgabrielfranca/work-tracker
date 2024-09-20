@@ -4,6 +4,7 @@ import { Typography } from '@/components/Typography';
 import { add, lastDayOfMonth, set, sub } from 'date-fns';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DAYS_IN_WEEK = 7;
 const CALENDAR_GAP = 8;
@@ -20,7 +21,7 @@ function Calendar({
   const lastMonthDay = lastMonth.getDay() === 6 ? -1 : lastMonth.getDay();
 
   return (
-    <View style={{ gap: 16 }}>
+    <View style={{ gap: 20 }}>
       <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
         <Button
           onPress={() => setMonth(lastDayOfMonth(sub(month, { months: 1 })))}
@@ -90,24 +91,32 @@ export default function Index() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
-    <View
+    <SafeAreaView
       style={{
         justifyContent: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        flexDirection: 'row',
         alignItems: 'center',
-        flex: 1,
         gap: 16,
       }}
     >
-      <Typography>{selectedDate.toDateString()}</Typography>
+      <Typography style={{ marginRight: 'auto' }}>
+        {selectedDate.toLocaleDateString('default', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+        })}
+      </Typography>
       <Modal>
         <ModalChange
           render={(setIsModalOpen) => (
             <Button onPress={() => setIsModalOpen(true)}>
-              <Typography>Open Calendar</Typography>
+              <Typography>Calendar</Typography>
             </Button>
           )}
         />
-        <ModalContent style={{ padding: 32, gap: 16 }}>
+        <ModalContent style={{ gap: 20 }}>
           <ModalChange
             render={(setIsModalOpen) => (
               <Calendar
@@ -128,6 +137,18 @@ export default function Index() {
           />
         </ModalContent>
       </Modal>
-    </View>
+      <Modal>
+        <ModalChange
+          render={(setIsModalOpen) => (
+            <Button onPress={() => setIsModalOpen(true)}>
+              <Typography>Create</Typography>
+            </Button>
+          )}
+        />
+        <ModalContent>
+          <Typography>Create new event</Typography>
+        </ModalContent>
+      </Modal>
+    </SafeAreaView>
   );
 }

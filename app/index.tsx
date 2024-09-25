@@ -1,5 +1,10 @@
 import { Button } from '@/components/Button';
-import { Modal, ModalChange, ModalContent } from '@/components/Modal';
+import {
+  Modal,
+  ModalButtonClose,
+  ModalButtonOpen,
+  ModalContent,
+} from '@/components/Modal';
 import { Typography } from '@/components/Typography';
 import { add, lastDayOfMonth, set, sub } from 'date-fns';
 import { useState } from 'react';
@@ -58,7 +63,7 @@ function Calendar({
               const monthDay = set(new Date(month), { date: day });
 
               return (
-                <Button
+                <ModalButtonClose
                   key={dayIndex}
                   style={[
                     { flex: 1, paddingHorizontal: 0 },
@@ -75,7 +80,7 @@ function Calendar({
                     : isNextMonth
                       ? day - month.getDate()
                       : day}
-                </Button>
+                </ModalButtonClose>
               );
             })}
           </View>
@@ -107,36 +112,14 @@ export default function Index() {
         })}
       </Typography>
       <Modal>
-        <ModalChange
-          render={(setIsModalOpen) => (
-            <Button onPress={() => setIsModalOpen(true)}>Calendar</Button>
-          )}
-        />
+        <ModalButtonOpen>Calendar</ModalButtonOpen>
         <ModalContent style={{ gap: 20 }}>
-          <ModalChange
-            render={(setIsModalOpen) => (
-              <Calendar
-                value={selectedDate}
-                onChange={(date) => {
-                  setSelectedDate(date);
-                  setIsModalOpen(false);
-                }}
-              />
-            )}
-          />
-          <ModalChange
-            render={(setIsModalOpen) => (
-              <Button onPress={() => setIsModalOpen(false)}>Close</Button>
-            )}
-          />
+          <Calendar value={selectedDate} onChange={setSelectedDate} />
+          <ModalButtonClose>Close</ModalButtonClose>
         </ModalContent>
       </Modal>
       <Modal>
-        <ModalChange
-          render={(setIsModalOpen) => (
-            <Button onPress={() => setIsModalOpen(true)}>Create</Button>
-          )}
-        />
+        <ModalButtonOpen>Create</ModalButtonOpen>
         <ModalContent>
           <Typography>Create new event</Typography>
         </ModalContent>

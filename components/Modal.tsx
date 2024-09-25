@@ -7,6 +7,7 @@ import Animated, {
   SlideInDown,
   SlideOutDown,
 } from 'react-native-reanimated';
+import { Button, ButtonProps } from './Button';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -33,17 +34,6 @@ function useModal(componentName: string) {
   }
 
   return context;
-}
-
-export function ModalChange({
-  render,
-}: {
-  render(
-    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  ): React.ReactNode;
-}) {
-  const { setIsOpen } = useModal(ModalChange.name);
-  return render(setIsOpen);
 }
 
 export function ModalContent({ style, ...props }: ViewProps) {
@@ -84,5 +74,33 @@ export function ModalContent({ style, ...props }: ViewProps) {
         </AnimatedPressable>
       </ModalContext.Provider>
     </Portal>
+  );
+}
+
+export function ModalButtonOpen({ onPress, ...props }: ButtonProps) {
+  const { setIsOpen } = useModal(ModalButtonOpen.name);
+
+  return (
+    <Button
+      onPress={(event) => {
+        setIsOpen(true);
+        onPress?.(event);
+      }}
+      {...props}
+    />
+  );
+}
+
+export function ModalButtonClose({ onPress, ...props }: ButtonProps) {
+  const { setIsOpen } = useModal(ModalButtonClose.name);
+
+  return (
+    <Button
+      onPress={(event) => {
+        setIsOpen(false);
+        onPress?.(event);
+      }}
+      {...props}
+    />
   );
 }

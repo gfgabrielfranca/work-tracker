@@ -1,7 +1,9 @@
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native';
 import { Typography } from './Typography';
 
-export function Button({ style, children, ...props }: TouchableOpacityProps) {
+export type ButtonProps = TouchableOpacityProps;
+
+export function Button({ style, children, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       style={[

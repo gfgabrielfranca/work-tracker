@@ -26,7 +26,7 @@ function Calendar({
         <Button
           onPress={() => setMonth(lastDayOfMonth(sub(month, { months: 1 })))}
         >
-          <Typography>{'<'}</Typography>
+          {'<'}
         </Button>
         <View style={{ alignItems: 'center' }}>
           <Typography>
@@ -39,7 +39,7 @@ function Calendar({
         <Button
           onPress={() => setMonth(lastDayOfMonth(add(month, { months: 1 })))}
         >
-          <Typography>{'>'}</Typography>
+          {'>'}
         </Button>
       </View>
       <View style={{ gap: CALENDAR_GAP }}>
@@ -70,13 +70,11 @@ function Calendar({
                   disabled={isPreviousMonth || isNextMonth}
                   onPress={() => onChange(monthDay)}
                 >
-                  <Typography>
-                    {isPreviousMonth
-                      ? lastMonth.getDate() - lastMonthDay + index
-                      : isNextMonth
-                        ? day - month.getDate()
-                        : day}
-                  </Typography>
+                  {isPreviousMonth
+                    ? lastMonth.getDate() - lastMonthDay + index
+                    : isNextMonth
+                      ? day - month.getDate()
+                      : day}
                 </Button>
               );
             })}
@@ -111,9 +109,7 @@ export default function Index() {
       <Modal>
         <ModalChange
           render={(setIsModalOpen) => (
-            <Button onPress={() => setIsModalOpen(true)}>
-              <Typography>Calendar</Typography>
-            </Button>
+            <Button onPress={() => setIsModalOpen(true)}>Calendar</Button>
           )}
         />
         <ModalContent style={{ gap: 20 }}>
@@ -130,9 +126,7 @@ export default function Index() {
           />
           <ModalChange
             render={(setIsModalOpen) => (
-              <Button onPress={() => setIsModalOpen(false)}>
-                <Typography>Close</Typography>
-              </Button>
+              <Button onPress={() => setIsModalOpen(false)}>Close</Button>
             )}
           />
         </ModalContent>
@@ -140,9 +134,7 @@ export default function Index() {
       <Modal>
         <ModalChange
           render={(setIsModalOpen) => (
-            <Button onPress={() => setIsModalOpen(true)}>
-              <Typography>Create</Typography>
-            </Button>
+            <Button onPress={() => setIsModalOpen(true)}>Create</Button>
           )}
         />
         <ModalContent>

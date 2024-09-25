@@ -8,6 +8,7 @@ import Animated, {
   SlideOutDown,
 } from 'react-native-reanimated';
 import { Button, ButtonProps } from './Button';
+import { KeyboardAvoidingView } from './KeyboardAvoidingView';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -36,7 +37,7 @@ function useModal(componentName: string) {
   return context;
 }
 
-export function ModalContent({ style, ...props }: ViewProps) {
+export function ModalContent(props: ViewProps) {
   const value = useModal(ModalContent.name);
 
   if (!value.isOpen) return null;
@@ -58,19 +59,17 @@ export function ModalContent({ style, ...props }: ViewProps) {
           <AnimatedPressable
             entering={SlideInDown}
             exiting={SlideOutDown}
-            style={[
-              {
-                backgroundColor: 'black',
-                position: 'absolute',
-                paddingVertical: 32,
-                width: '100%',
-                padding: 24,
-                bottom: 0,
-              },
-              style,
-            ]}
-            {...props}
-          />
+            style={{
+              backgroundColor: 'black',
+              position: 'absolute',
+              paddingVertical: 32,
+              width: '100%',
+              padding: 24,
+              bottom: 0,
+            }}
+          >
+            <KeyboardAvoidingView {...props} />
+          </AnimatedPressable>
         </AnimatedPressable>
       </ModalContext.Provider>
     </Portal>

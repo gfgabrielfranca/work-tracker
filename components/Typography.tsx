@@ -1,6 +1,8 @@
 import { Text, TextProps, useColorScheme } from 'react-native';
 
-export function Typography({ style, ...props }: TextProps) {
+export type TypographyProps = TextProps;
+
+export function Typography({ style, ...props }: TypographyProps) {
   const colorScheme = useColorScheme();
 
   return (

@@ -12,9 +12,10 @@ export function Button({ style, children, ...props }: ButtonProps) {
           justifyContent: 'center',
           paddingHorizontal: 16,
           alignItems: 'center',
-          paddingVertical: 8,
+          paddingVertical: 10,
           borderRadius: 4,
         },
+        props.disabled && { opacity: 0.3 },
         style,
       ]}
       activeOpacity={0.7}

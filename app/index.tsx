@@ -18,10 +18,13 @@ import {
 } from 'date-fns';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Alert, Keyboard, View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { works } from '@/database/schema';
+import { useSQLiteContext } from 'expo-sqlite';
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('default', {
@@ -131,6 +134,7 @@ const workSchema = z.object({
 });
 
 function CreateWorkForm(props: { startDate: Date }) {
+  const database = drizzle(useSQLiteContext());
   const { handleSubmit, control, watch } = useForm<z.infer<typeof workSchema>>({
     defaultValues: { ...props, endDate: undefined, title: '' },
     resolver: zodResolver(workSchema),
@@ -160,7 +164,7 @@ function CreateWorkForm(props: { startDate: Date }) {
         <FormFieldLabel>Start date</FormFieldLabel>
         <Modal>
           <ModalButtonOpen onPress={Keyboard.dismiss}>
-            {formatDate(watch('startDate'))}
+            {formatDate(startDate)}
           </ModalButtonOpen>
           <ModalContent>
             <Controller
@@ -201,13 +205,13 @@ function CreateWorkForm(props: { startDate: Date }) {
       </FormField>
       <View style={{ flexDirection: 'row', gap: 16, marginTop: 8 }}>
         <ModalButtonClose>Cancel</ModalButtonClose>
-        <Button
+        <ModalButtonClose
           disabled={transformTitle(title) === ''}
-          onPress={handleSubmit((data) => Alert.alert(JSON.stringify(data)))}
+          onPress={handleSubmit((data) => database.insert(works).values(data))}
           style={{ flex: 1 }}
         >
           Create
-        </Button>
+        </ModalButtonClose>
       </View>
     </View>
   );

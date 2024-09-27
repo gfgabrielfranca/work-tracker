@@ -95,9 +95,9 @@ export function ModalButtonClose({ onPress, ...props }: ButtonProps) {
 
   return (
     <Button
-      onPress={(event) => {
+      onPress={async (event) => {
+        await onPress?.(event);
         setIsOpen(false);
-        onPress?.(event);
       }}
       {...props}
     />

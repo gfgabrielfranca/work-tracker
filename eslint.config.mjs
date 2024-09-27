@@ -7,8 +7,10 @@ import path from 'node:path';
 import url from 'node:url';
 import { FlatCompat } from '@eslint/eslintrc';
 import prettier from 'eslint-config-prettier';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default tsEslint.config(
+  ...pluginQuery.configs['flat/recommended'],
   { ignores: ['**/*.js'] },
   {
     extends: [

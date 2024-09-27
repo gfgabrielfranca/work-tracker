@@ -25,6 +25,7 @@ import { z } from 'zod';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { works } from '@/database/schema';
 import { useSQLiteContext } from 'expo-sqlite';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('default', {
@@ -133,7 +134,12 @@ const workSchema = z.object({
   startDate: z.date(),
 });
 
+const worksQueryKey = ['works'];
+
 function CreateWorkForm(props: { startDate: Date }) {
+  console.log(CreateWorkForm.name);
+
+  const queryClient = useQueryClient();
   const database = drizzle(useSQLiteContext());
   const { handleSubmit, control, watch } = useForm<z.infer<typeof workSchema>>({
     defaultValues: { ...props, endDate: undefined, title: '' },
@@ -207,7 +213,10 @@ function CreateWorkForm(props: { startDate: Date }) {
         <ModalButtonClose>Cancel</ModalButtonClose>
         <ModalButtonClose
           disabled={transformTitle(title) === ''}
-          onPress={handleSubmit((data) => database.insert(works).values(data))}
+          onPress={handleSubmit(async (data) => {
+            await database.insert(works).values(data);
+            queryClient.invalidateQueries({ queryKey: worksQueryKey });
+          })}
           style={{ flex: 1 }}
         >
           Create
@@ -217,36 +226,71 @@ function CreateWorkForm(props: { startDate: Date }) {
   );
 }
 
+function Test() {
+  console.log(Test.name);
+
+  const queryClient = useQueryClient();
+  const database = drizzle(useSQLiteContext());
+  const worksQuery = useQuery({
+    queryFn: () => database.select().from(works),
+    queryKey: worksQueryKey,
+  });
+
+  return (
+    <View style={{ gap: 16 }}>
+      <View style={{ flexDirection: 'row', gap: 16 }}>
+        <Button
+          style={{ flex: 1 }}
+          onPress={async () => {
+            await database.delete(works);
+            queryClient.setQueryData(worksQueryKey, []);
+          }}
+        >
+          Clean
+        </Button>
+        <Button style={{ flex: 1 }} onPress={() => worksQuery.refetch()}>
+          Refresh
+        </Button>
+      </View>
+      <Typography>{JSON.stringify(worksQuery.data)}</Typography>
+    </View>
+  );
+}
+
 export default function Index() {
+  console.log(Index.name);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
-    <SafeAreaView
-      style={{
-        justifyContent: 'center',
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 16,
-      }}
-    >
-      <Typography style={{ marginRight: 'auto' }}>
-        {formatDate(selectedDate)}
-      </Typography>
-      <Modal>
-        <ModalButtonOpen>Calendar</ModalButtonOpen>
-        <ModalContent style={{ gap: 20 }}>
-          <Calendar value={selectedDate} onChange={setSelectedDate} />
-          <ModalButtonClose>Close</ModalButtonClose>
-        </ModalContent>
-      </Modal>
-      <Modal>
-        <ModalButtonOpen>Create</ModalButtonOpen>
-        <ModalContent>
-          <CreateWorkForm startDate={selectedDate} />
-        </ModalContent>
-      </Modal>
+    <SafeAreaView style={{ paddingHorizontal: 16, gap: 16 }}>
+      <View
+        style={{
+          justifyContent: 'center',
+          paddingVertical: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+        }}
+      >
+        <Typography style={{ marginRight: 'auto' }}>
+          {formatDate(selectedDate)}
+        </Typography>
+        <Modal>
+          <ModalButtonOpen>Calendar</ModalButtonOpen>
+          <ModalContent style={{ gap: 20 }}>
+            <Calendar value={selectedDate} onChange={setSelectedDate} />
+            <ModalButtonClose>Close</ModalButtonClose>
+          </ModalContent>
+        </Modal>
+        <Modal>
+          <ModalButtonOpen>Create</ModalButtonOpen>
+          <ModalContent>
+            <CreateWorkForm startDate={selectedDate} />
+          </ModalContent>
+        </Modal>
+      </View>
+      <Test />
     </SafeAreaView>
   );
 }
